@@ -13,8 +13,8 @@ namespace ConsoleApp1
                 new Group("Led Zeppelin"),
                 new Group("Luccas")
             ];
-            Random r= new Random();
-            
+            Random r = new Random();
+
             list.ForEach(group =>
             {
                 group.Grades.Add(r.Next(1, 11));
@@ -29,6 +29,13 @@ namespace ConsoleApp1
             string? v = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(v)) return -1;
             return int.Parse(v);
+        }
+
+        static string ReadLine()
+        {
+            string? v = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(v)) return "-1";
+            return v;
         }
 
         static void ExibirImagem()
@@ -71,35 +78,35 @@ namespace ConsoleApp1
             do
             {
                 ExibirImagem();
-                Thread.Sleep(800);
+                Thread.Sleep(80);
                 Console.WriteLine("\n");
                 Console.WriteLine("Digite 1 para registrar uma banda");
                 Console.WriteLine("Digite 2 para mostrar todas as bandas");
                 Console.WriteLine("Digite 3 para avaliar uma banda");
                 Console.WriteLine("Digite 4 para exibir a média de uma banda");
-                Console.WriteLine("Digite 0 para sair");
+                Console.WriteLine("Digite 0 para finalizar o atendimento");
                 Console.Write("\nDigite uma opção: ");
-                int option = ToConvert();
+                string option = ReadLine()!;
 
                 switch (option)
                 {
-                    case 1:
+                    case "1":
                         ExibirImagem();
                         command.Execute(new RegistrarBanda(list));
                         break;
-                    case 2:
+                    case "2":
                         ExibirImagem();
                         command.Execute(new ListarBandas(list));
                         break;
-                    case 3:
+                    case "3":
                         ExibirImagem();
                         command.Execute(new AvaliarBanda(list));
                         break;
-                    case 4:
+                    case "4":
                         ExibirImagem();
                         command.Execute(new ExibirMediaDaBanda(list));
                         break;
-                    case 0:
+                    case "0":
                         Encerrando();
                         return;
                     default:
@@ -222,7 +229,7 @@ namespace ConsoleApp1
                 Console.Write("Digite o nome da banda que deseja avaliar: ");
                 string? name = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(name)) return;
-                if (!List.Any(Group => Group.Title.Equals(name)))
+                if (!List.Any(Group => Group.Title.Equals(name, StringComparison.OrdinalIgnoreCase)))
                 {
                     Console.WriteLine("Banda nao registrada");
                     Thread.Sleep(1500);
@@ -232,11 +239,11 @@ namespace ConsoleApp1
                 Console.Write($"Qual a nota que a banda {name} merece: ");
                 int nota = ToConvert();
                 if (nota < 1 || nota > 10) return;
-                Group group = List.Find(group => group.Title == name)!;
+                Group group = List.Find(group => group.Title.Equals(name, StringComparison.OrdinalIgnoreCase))!;
                 group.Grades.Add(nota);
                 Console.WriteLine($"\nBanda {name} avaliada com Sucesso!!");
                 Thread.Sleep(1000);
-                
+
             }
 
         }
@@ -255,13 +262,13 @@ namespace ConsoleApp1
                 Console.Write("Digite o nome da banda que deseja Exibir Media: ");
                 string? name = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(name)) return;
-                if (!List.Any(Group => Group.Title.Equals(name)))
+                if (!List.Any(Group => Group.Title.Equals(name, StringComparison.OrdinalIgnoreCase)))
                 {
                     Console.WriteLine("Banda nao registrada");
                     Thread.Sleep(1500);
                     return;
                 }
-                Group group = List.Find(group => group.Title == name)!;
+                Group group = List.Find(group => group.Title.Equals(name, StringComparison.OrdinalIgnoreCase))!;
                 double average = group.Grades.Average();
                 Console.Clear();
                 Console.WriteLine(@"
